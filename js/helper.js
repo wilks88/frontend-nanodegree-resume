@@ -14,14 +14,14 @@ These are HTML strings. As part of the course, you'll be using JavaScript functi
 replace the %data% placeholder text you see in them.
 */
 var HTMLheaderName = '<h1 id="name">%data%</h1>';
-var HTMLheaderRole = '<span>%data%</span><hr/>';
+var HTMLheaderRole = '<span>%data%</span><hr>';
 
 var HTMLcontactGeneric = '<li class="flex-item"><span class="orange-text">%contact%</span><span class="white-text">%data%</span></li>';
 var HTMLmobile = '<li class="flex-item"><span class="orange-text">mobile</span><span class="white-text">%data%</span></li>';
 var HTMLemail = '<li class="flex-item"><span class="orange-text">email</span><span class="white-text">%data%</span></li>';
 var HTMLtwitter = '<li class="flex-item"><span class="orange-text">twitter</span><span class="white-text">%data%</span></li>';
 var HTMLgithub = '<li class="flex-item"><span class="orange-text">github</span><span class="white-text">%data%</span></li>';
-var HTMLblog = '<li class="flex-item"><span class="orange-text">soundcloud.com/</span><span class="white-text">%data%</span></li>';
+var HTMLblog = '<li class="flex-item"><span class="orange-text">soudcloud</span><span class="white-text">%data%</span></li>';
 var HTMLlocation = '<li class="flex-item"><span class="orange-text">location</span><span class="white-text">%data%</span></li>';
 
 var HTMLbioPic = '<img src="%data%" class="biopic">';
@@ -50,7 +50,7 @@ var HTMLschoolDates = '<div class="date-text">%data%</div>';
 var HTMLschoolLocation = '<div class="location-text">%data%</div>';
 var HTMLschoolMajor = '<em><br>Major: %data%</em>';
 
-var HTMLonlineClasses = '<h3 style="padding-left: 0px;">Online Classes</h3>';
+var HTMLonlineClasses = '<h3>Online Classes</h3>';
 var HTMLonlineTitle = '<a href="#">%data%';
 var HTMLonlineSchool = ' - %data%</a>';
 var HTMLonlineDates = '<div class="date-text">%data%</div>';
@@ -66,8 +66,9 @@ Don't delete! It hooks up your code to the button you'll be appending.
 */
 $(document).ready(function() {
   $('button').click(function() {
-    var iName = inName() || function(){};
-    $('#name').html(iName);  
+    var $name = $('#name');
+    var iName = inName($name.text()) || function(){};
+    $name.html(iName);
   });
 });
 
@@ -86,12 +87,13 @@ function logClicks(x,y) {
   console.log('x location: ' + x + '; y location: ' + y);
 }
 
-// logs where user clicks on page
 $(document).click(function(loc) {
   var x = loc.pageX;
   var y = loc.pageY;
   logClicks(x,y);
 });
+
+
 
 /*
 This is the fun part. Here's where we generate the custom Google Map for the website.
@@ -132,16 +134,20 @@ function initializeMap() {
     locations.push(bio.contacts.location);
 
     // iterates through school locations and appends each location to
-    // the locations array
-    for (var school in education.schools) {
-      locations.push(education.schools[school].location);
-    }
+    // the locations array. Note that forEach is used for array iteration
+    // as described in the Udacity FEND Style Guide: 
+    // https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
+    education.schools.forEach(function(school){
+      locations.push(school.location);
+    });
 
     // iterates through work locations and appends each location to
-    // the locations array
-    for (var job in work.jobs) {
-      locations.push(work.jobs[job].location);
-    }
+    // the locations array. Note that forEach is used for array iteration
+    // as described in the Udacity FEND Style Guide: 
+    // https://udacity.github.io/frontend-nanodegree-styleguide/javascript.html#for-in-loop
+    work.jobs.forEach(function(job){
+      locations.push(job.location);
+    });
 
     return locations;
   }
@@ -176,6 +182,7 @@ function initializeMap() {
     // hmmmm, I wonder what this is about...
     google.maps.event.addListener(marker, 'click', function() {
       // your code goes here!
+      console.log("clicked marker: ", marker); // logs and provides info on map marker
     });
 
     // this is where the pin actually gets added to the map.
@@ -208,17 +215,16 @@ function initializeMap() {
     var service = new google.maps.places.PlacesService(map);
 
     // Iterates through the array of locations, creates a search object for each location
-    for (var place in locations) {
-
+      locations.forEach(function(place){
       // the search request object
       var request = {
-        query: locations[place]
+        query: place
       };
 
       // Actually searches the Google Maps API for location data and runs the callback
       // function with the search results after each search.
       service.textSearch(request, callback);
-    }
+    });
   }
 
   // Sets the boundaries of the map based on pin locations
@@ -240,8 +246,9 @@ Uncomment the code below when you're ready to implement a Google Map!
 // Calls the initializeMap() function when the page loads
 window.addEventListener('load', initializeMap);
 
-// Vanilla JS way to listen for resizing of the window and adjust map bounds
+// Vanilla JS way to listen for resizing of the window
+// and adjust map bounds
 window.addEventListener('resize', function(e) {
-//Make sure the map bounds get updated on page resize
+  //Make sure the map bounds get updated on page resize
   map.fitBounds(mapBounds);
 });
