@@ -17,8 +17,9 @@ var inName = function() {
 // biography
 var bio = {
 	"name": "Bryan A. Wilkens",
-	"role": ["Web Developer", " Anthropologist", " Independent Musician"],
+	"role": "Anthropologist",
 	"contacts": {
+		"mobile": "555-555-5555",
 		"email": "bryan.a.wilkens@gmail.com",
 		"twitter": "@bwilcats",
 		"github": "wilks88",
@@ -76,15 +77,16 @@ var education = {
 			"dates": "2007 - 2011",
 			"degree": "Bachelor of Arts",
 			"major": "Anthropology",
-			"minor": "Biology"
+			"url": "http://www.stonybrook.edu"
 		},
 
 		{
 			"name": "Manhattan College",
 			"location": "Bronx, NY",
 			"dates": "2012 - 2013",
-			"degree": "",
-			"major": "Nuclear Medicine"
+			"degree": "Certificate",
+			"major": "Nuclear Medicine",
+			"url": "http://www.manhattan.edu"
 		}
 	],
 
@@ -92,21 +94,21 @@ var education = {
 		{
 			"title": "Introduction to Interactive Programming in Python",
 			"school": "Rice University",
-			"dates": "September - November 2014",
+			"date": "September - November 2014",
 			"url": "https://www.coursera.org/account/accomplishments/certificate/6CAPJP25DS"
 		},
 
 		{
 			"title": "Beginning Game Programming with C#",
 			"school": "University of Colorado Systems",
-			"dates": "February - May 2015",
+			"date": "February - May 2015",
 			"url": "https://www.coursera.org/account/accomplishments/certificate/22X9JDK25Y"
 		},
 
 		{
 			"title": "Front End Web Developer Nanodegree",
 			"school": "Udacity",
-			"dates": "October 2015 - Present",
+			"date": "October 2015 - Present",
 			"url": "https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001"
 		}
 	]
@@ -137,16 +139,18 @@ bio.display = function() {
 	$("#header").append(formattedMessage);
 
 	// contact info
+	var formattedMobile = HTMLmobile.replace("%data%", bio.contacts.mobile);
 	var formattedContactLocation = HTMLlocation.replace("%data%", bio.contacts.location);
 	var formattedEmail = HTMLemail.replace("%data%", bio.contacts.email);
 	var formattedtwitter = HTMLtwitter.replace("%data%", bio.contacts.twitter);
 	var formattedGithub = HTMLgithub.replace("%data%", bio.contacts.github);
 	var formattedSoundCloud = HTMLblog.replace("%data%", bio.contacts.soundcloud);
 	$("#topContacts").append(formattedContactLocation);
+	$("#topContacts").append(formattedMobile);
 	$("#topContacts").append(formattedEmail);
 	$("#topContacts").append(formattedtwitter);
 	$("#topContacts").append(formattedGithub);
-	$("#topContacts").append(formattedSoundCloud);
+	//$("#topContacts").append(formattedSoundCloud);
 
 	// skills
 	if (bio.skills.length > 0){
@@ -187,7 +191,7 @@ education.display = function() {
 	for (var course in education.onlineCourses) {
 		var formattedTitle = HTMLonlineTitle.replace("%data%", education.onlineCourses[course].title);
 		var formattedSchool = HTMLonlineSchool.replace("%data%", education.onlineCourses[course].school);
-		var formattedOnlineDates = HTMLonlineDates.replace("%data%", education.onlineCourses[course].dates);
+		var formattedOnlineDates = HTMLonlineDates.replace("%data%", education.onlineCourses[course].date);
 		var formattedURL = HTMLonlineURL.replace("%data%", education.onlineCourses[course].url);
 		var formattedOnlineEntry = formattedTitle + formattedSchool + formattedOnlineDates + formattedURL;
 		$(".education-entry:last").append(formattedOnlineEntry);
